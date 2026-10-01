@@ -1,74 +1,81 @@
-apply plugin: 'com.android.application'
 
-apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion rootProject.buildToolsVersion
-    defaultConfig {
-        applicationId "com.example.android.testing.espresso.BasicSample"
-        minSdkVersion 18
-        targetSdkVersion 33
-        versionCode 1
-        versionName "1.0"
+    namespace 'com.example.android.testing.espresso.BasicSample'
+    compileSdk 35
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    defaultConfig {
+        applicationId 'com.example.android.testing.espresso.BasicSample'
+        minSdk 18
+        targetSdk 33
+        versionCode 1
+        versionName '1.0'
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
-    lintOptions {
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    lint {
         abortOnError false
     }
-    productFlavors {
-    }
+
     testOptions {
         unitTests {
             includeAndroidResources = true
         }
+
         managedDevices {
             devices {
-
-                // run with ../gradlew  nexusOneApi30DebugAndroidTest
-                nexusOneApi30(com.android.build.api.dsl.ManagedVirtualDevice) {
-                    // A lower resolution device is used here for better emulator performance
-                    device = "Nexus One"
+                nexusOneApi30(
+                        com.android.build.api.dsl.ManagedVirtualDevice
+                ) {
+                    device = 'Nexus One'
                     apiLevel = 30
-                    // Also use the AOSP ATD image for better emulator performance
-                    systemImageSource = "aosp-atd"
+                    systemImageSource = 'aosp-atd'
                 }
             }
         }
     }
-}
 
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = '1.8'
     }
 }
 
 dependencies {
     // App dependencies
-    implementation 'androidx.annotation:annotation:' + rootProject.androidxAnnotationVersion;
-    implementation 'com.google.guava:guava:' + rootProject.guavaVersion
+    implementation "androidx.annotation:annotation:$androidxAnnotationVersion"
+    implementation "com.google.guava:guava:$guavaVersion"
+
+    // Instrumentation testing
     androidTestImplementation 'androidx.recyclerview:recyclerview:1.2.1'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.1'
+    androidTestImplementation "androidx.test:core:$coreVersion"
+    androidTestImplementation "androidx.test:core-ktx:$coreVersion"
+    androidTestImplementation "androidx.test.ext:junit:$extJUnitVersion"
+    androidTestImplementation "androidx.test.ext:junit-ktx:$extJUnitVersion"
+    androidTestImplementation "androidx.test:runner:$runnerVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 
-    // Testing-only dependencies
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    androidTestImplementation 'androidx.test:core:' + rootProject.coreVersion
-    androidTestImplementation 'androidx.test:core-ktx:' + rootProject.coreVersion
-    androidTestImplementation 'androidx.test.ext:junit:' + rootProject.extJUnitVersion
-    androidTestImplementation 'androidx.test.ext:junit-ktx:' + rootProject.extJUnitVersion
-    androidTestImplementation 'androidx.test:runner:' + rootProject.runnerVersion
-    androidTestImplementation 'androidx.test.espresso:espresso-core:' + rootProject.espressoVersion
-
-    testImplementation 'androidx.test:core:' + rootProject.coreVersion;
-    testImplementation 'androidx.test.ext:junit:' + rootProject.extJUnitVersion
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.robolectric:robolectric:' + rootProject.robolectricVersion
-    testImplementation 'androidx.test.espresso:espresso-core:' + rootProject.espressoVersion
-    testImplementation 'androidx.test.espresso:espresso-intents:' + rootProject.espressoVersion
-    testImplementation 'androidx.test.ext:truth:' + rootProject.extTruthVersion
+    // Unit testing
+    testImplementation "androidx.test:core:$coreVersion"
+    testImplementation "androidx.test.ext:junit:$extJUnitVersion"
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.robolectric:robolectric:$robolectricVersion"
+    testImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    testImplementation "androidx.test.espresso:espresso-intents:$espressoVersion"
+    testImplementation "androidx.test.ext:truth:$extTruthVersion"
 }
